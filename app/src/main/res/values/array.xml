@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <integer-array name="progress_colors">
+        <item>@android:color/holo_orange_light</item>
+        <item>@android:color/white</item>
+        <item>@color/colorPrimaryDark</item>
+        <item>@android:color/holo_purple</item>
+        <item>@android:color/holo_blue_dark</item>
+    </integer-array>
+</resources>

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "800867114614",
+    "firebase_url": "https://walliswall.firebaseio.com",
+    "project_id": "walliswall",
+    "storage_bucket": "walliswall.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:800867114614:android:dc475ac968016a8b764957",
+        "android_client_info": {
+          "package_name": "com.Sujal_Industries.wallpapers.WALLisWALL"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "800867114614-pjleviogsviicj4dhuuujsd697inukt1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5PQFu_OtEUWbZ65vFG9AC6k1aO0E-Sb4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "800867114614-pjleviogsviicj4dhuuujsd697inukt1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
