@@ -30,14 +30,12 @@ public class Wallpaper extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallpaper);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            int position = getIntent().getIntExtra("Position", 0);
-            View endView = findViewById(R.id.linearL);
-            ViewCompat.setTransitionName(endView, "Wall" + (position + 1) + "_Transition");
-            setEnterSharedElementCallback(new MaterialContainerTransformSharedElementCallback());
-            getWindow().setSharedElementEnterTransition(new MaterialContainerTransform().addTarget(R.id.linearL).setDuration(300L));
-            getWindow().setSharedElementReturnTransition(new MaterialContainerTransform().addTarget(R.id.linearL).setDuration(250L));
-        }
+        int position = getIntent().getIntExtra("Position", 0);
+        View endView = findViewById(R.id.linearL);
+        ViewCompat.setTransitionName(endView, "Wall" + (position + 1) + "_Transition");
+        setEnterSharedElementCallback(new MaterialContainerTransformSharedElementCallback());
+        getWindow().setSharedElementEnterTransition(new MaterialContainerTransform().addTarget(R.id.linearL).setDuration(300L));
+        getWindow().setSharedElementReturnTransition(new MaterialContainerTransform().addTarget(R.id.linearL).setDuration(250L));
 
         ImageView wall = findViewById(R.id.wall);
 

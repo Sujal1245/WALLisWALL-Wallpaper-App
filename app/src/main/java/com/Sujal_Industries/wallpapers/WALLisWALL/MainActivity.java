@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.splashscreen.SplashScreen;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,13 +39,13 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
     @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setExitSharedElementCallback(new MaterialContainerTransformSharedElementCallback());
-            getWindow().setSharedElementsUseOverlay(false);
-        }
+        setExitSharedElementCallback(new MaterialContainerTransformSharedElementCallback());
+        getWindow().setSharedElementsUseOverlay(false);
 
         super.onCreate(savedInstanceState);
+
+        SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
+
         setContentView(R.layout.activity_main);
 
         images = new ArrayList<>();
@@ -97,14 +98,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
         Intent i = new Intent(getApplicationContext(), Wallpaper.class);
         i.putExtra("StorageRef", sr.getPath());
         i.putExtra("Position", position);
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            View startView = Objects.requireNonNull(recyclerView.findViewHolderForAdapterPosition(position)).itemView;
-            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, startView, ViewCompat.getTransitionName(startView));
-            startActivity(i, options.toBundle());
-        } else {
-            startActivity(i);
-        }
+        View startView = Objects.requireNonNull(recyclerView.findViewHolderForAdapterPosition(position)).itemView;
+        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, startView, ViewCompat.getTransitionName(startView));
+        startActivity(i, options.toBundle());
     }
 
     @Override
