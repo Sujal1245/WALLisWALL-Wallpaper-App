@@ -1,12 +1,15 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight">
+    <style name="AppTheme" parent="Theme.Material3.DayNight">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowActivityTransitions" tools:targetApi="lollipop">true</item>
+        <item name="colorSecondaryContainer">@color/colorPrimaryDark</item>
+        <item name="colorOnSurfaceVariant">@color/colorPrimaryDark</item>
+        <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
+        <item name="android:windowActivityTransitions">true</item>
     </style>
 
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">

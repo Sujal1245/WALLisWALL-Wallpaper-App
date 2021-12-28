@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -34,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
     private RecyclerAdapter adapter;
     private ShimmerFrameLayout container;
     private static final String spFileKey = "WallisWall.SECRET_FILE";
+    private NavigationBarView navigationBarView;
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
@@ -50,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
         images = new ArrayList<>();
         container = findViewById(R.id.shimmerContainer);
         recyclerView = findViewById(R.id.recyclerView);
+        navigationBarView = findViewById(R.id.bottom_navigation);
 
         SharedPreferences sharedPreferences = getSharedPreferences(spFileKey, MODE_PRIVATE);
         boolean isNight = sharedPreferences.getBoolean("isNight", false);
@@ -79,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
                     container.stopShimmer();
                     container.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.VISIBLE);
+                    navigationBarView.setVisibility(View.VISIBLE);
                     adapter.notifyDataSetChanged();
                 })
                 .addOnFailureListener(e -> {

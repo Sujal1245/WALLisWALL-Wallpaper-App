@@ -3,4 +3,7 @@
     <string name="image_1">Image 1</string>
     <string name="apply_wallpaper">Apply Wallpaper</string>
     <string name="wall">Wall</string>
+    <string name="walls">Walls</string>
+    <string name="favourites">Favourites</string>
+    <string name="settings">Settings</string>
 </resources>

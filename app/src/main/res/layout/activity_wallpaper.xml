@@ -42,8 +42,10 @@
         android:text="@string/apply_wallpaper"
         android:textAllCaps="false"
         android:textSize="16sp"
+        android:textColor="@android:color/black"
         app:cornerRadius="25dp"
         app:icon="@drawable/ic_baseline_collections_24"
+        app:iconTint="@android:color/black"
         app:strokeColor="?attr/colorSurface"
         app:strokeWidth="1dp"
         tools:targetApi="lollipop" />
