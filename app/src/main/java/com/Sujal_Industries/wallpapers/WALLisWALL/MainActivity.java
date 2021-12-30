@@ -14,13 +14,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.content.ContextCompat;
 import androidx.core.splashscreen.SplashScreen;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
-import com.google.android.material.color.DynamicColors;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback;
 import com.google.firebase.storage.FirebaseStorage;
@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
     private ShimmerFrameLayout container;
     private static final String spFileKey = "WallisWall.SECRET_FILE";
     private NavigationBarView navigationBarView;
+    private boolean isNight;
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
@@ -56,13 +57,13 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
         navigationBarView = findViewById(R.id.bottom_navigation);
 
         SharedPreferences sharedPreferences = getSharedPreferences(spFileKey, MODE_PRIVATE);
-        boolean isNight = sharedPreferences.getBoolean("isNight", false);
+        isNight = sharedPreferences.getBoolean("isNight", false);
         if (isNight) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-            getWindow().setNavigationBarColor(getResources().getColor(R.color.navColorDark));
+            getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.navColorDark));
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-            getWindow().setNavigationBarColor(getResources().getColor(R.color.navColorLight));
+            getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.navColorLight));
         }
 
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 2);
@@ -104,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
         Intent i = new Intent(getApplicationContext(), Wallpaper.class);
         i.putExtra("StorageRef", sr.getPath());
         i.putExtra("Position", position);
+        i.putExtra("isNight", isNight);
         View startView = Objects.requireNonNull(recyclerView.findViewHolderForAdapterPosition(position)).itemView;
         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, startView, ViewCompat.getTransitionName(startView));
         startActivity(i, options.toBundle());

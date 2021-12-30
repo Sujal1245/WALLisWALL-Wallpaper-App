@@ -4,12 +4,12 @@ import android.annotation.SuppressLint;
 import android.app.WallpaperManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -29,6 +29,13 @@ public class Wallpaper extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallpaper);
+
+        boolean isNight = getIntent().getBooleanExtra("isNight", false);
+        if (isNight) {
+            getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.navColorDark));
+        } else {
+            getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.navColorLight));
+        }
 
         int position = getIntent().getIntExtra("Position", 0);
         View endView = findViewById(R.id.linearL);
