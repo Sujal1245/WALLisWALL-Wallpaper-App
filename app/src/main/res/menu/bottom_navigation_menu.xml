@@ -7,12 +7,12 @@
         android:title="@string/walls"/>
     <item
         android:id="@+id/fav_page"
-        android:enabled="false"
+        android:enabled="true"
         android:icon="@drawable/ic_baseline_favorite_24"
         android:title="@string/favourites"/>
     <item
         android:id="@+id/set_page"
-        android:enabled="false"
+        android:enabled="true"
         android:icon="@drawable/ic_baseline_settings_24"
         android:title="@string/settings"/>
 </menu>

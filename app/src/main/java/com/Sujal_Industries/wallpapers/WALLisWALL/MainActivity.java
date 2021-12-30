@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.splashscreen.SplashScreen;
 import androidx.core.view.ViewCompat;
@@ -21,7 +22,10 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -35,11 +39,15 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
     private ArrayList<StorageReference> images;
     private RecyclerAdapter adapter;
     private ShimmerFrameLayout container;
+    private NavigationBarView bottomNavBar;
+    private ChipGroup themeToggle;
+    private Chip darkChip;
+    private Chip lightChip;
+    private LinearLayoutCompat setting1;
     private static final String spFileKey = "WallisWall.SECRET_FILE";
-    private NavigationBarView navigationBarView;
     private boolean isNight;
 
-    @SuppressLint("NotifyDataSetChanged")
+    @SuppressLint({"NotifyDataSetChanged", "NonConstantResourceId"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setExitSharedElementCallback(new MaterialContainerTransformSharedElementCallback());
@@ -47,22 +55,28 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
 
         super.onCreate(savedInstanceState);
 
-        SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
+        SplashScreen.installSplashScreen(this);
 
         setContentView(R.layout.activity_main);
 
         images = new ArrayList<>();
         container = findViewById(R.id.shimmerContainer);
         recyclerView = findViewById(R.id.recyclerView);
-        navigationBarView = findViewById(R.id.bottom_navigation);
+        bottomNavBar = findViewById(R.id.bottom_navigation);
+        themeToggle = findViewById(R.id.themeToggle);
+        darkChip = findViewById(R.id.turnDark);
+        lightChip = findViewById(R.id.turnLight);
+        setting1 = findViewById(R.id.settingsLinear1);
 
         SharedPreferences sharedPreferences = getSharedPreferences(spFileKey, MODE_PRIVATE);
         isNight = sharedPreferences.getBoolean("isNight", false);
         if (isNight) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            darkChip.setChecked(true);
             getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.navColorDark));
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            lightChip.setChecked(true);
             getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.navColorLight));
         }
 
@@ -86,8 +100,30 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
                     container.stopShimmer();
                     container.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.VISIBLE);
-                    navigationBarView.setVisibility(View.VISIBLE);
+                    bottomNavBar.setVisibility(View.VISIBLE);
                     adapter.notifyDataSetChanged();
+
+                    bottomNavBar.setOnItemSelectedListener(item -> {
+                        switch (item.getItemId()) {
+                            case R.id.main_page: {
+                                recyclerView.setVisibility(View.VISIBLE);
+                                setting1.setVisibility(View.GONE);
+                                return true;
+                            }
+                            case R.id.fav_page: {
+                                Snackbar.make(findViewById(R.id.mainCoord), "Under Construction :)", Snackbar.LENGTH_SHORT).show();
+                                return true;
+                            }
+                            case R.id.set_page: {
+                                recyclerView.setVisibility(View.GONE);
+                                setting1.setVisibility(View.VISIBLE);
+                                observeChoice();
+                                return true;
+                            }
+                            default:
+                                return true;
+                        }
+                    });
                 })
                 .addOnFailureListener(e -> {
                     // Uh-oh, an error occurred!
@@ -111,28 +147,18 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
         startActivity(i, options.toBundle());
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_one, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.darkToggle) {
+    public void observeChoice() {
+        themeToggle.setOnCheckedChangeListener((group, checkedId) -> {
             SharedPreferences sharedPreferences = getSharedPreferences(spFileKey, MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            boolean isNight = sharedPreferences.getBoolean("isNight", false);
-            if (isNight) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                editor.putBoolean("isNight", false);
-            } else {
+            if (!isNight) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                 editor.putBoolean("isNight", true);
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                editor.putBoolean("isNight", false);
             }
             editor.apply();
-        }
-        return true;
+        });
     }
 }
