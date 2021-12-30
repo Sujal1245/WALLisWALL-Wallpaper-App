@@ -12,28 +12,26 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/album"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="210dp"
             android:scaleType="fitXY"
-            android:contentDescription="@string/wall" />
-
+            android:contentDescription="@string/wall"
+            app:shapeAppearanceOverlay="@style/ImageCircleTheme"/>
         <View
             android:layout_width="match_parent"
-            android:layout_height="4dp"
-            android:background="@color/colorPrimaryDark" />
+            android:layout_height="0dp"
+            android:background="?attr/colorSurface" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/album_title"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:background="@color/colorPrimary"
             android:gravity="center"
             android:padding="8dp"
             android:text="@string/image_1"
-            android:textSize="18sp"
-            android:textColor="@android:color/white"/>
+            android:textSize="18sp" />
 
     </LinearLayout>
 

@@ -23,4 +23,9 @@
         // Set the theme of the Activity that directly follows your splash screen.
         <item name="postSplashScreenTheme">@style/AppTheme</item>  # Required.
     </style>
+
+    <style name="ImageCircleTheme">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12%</item>
+    </style>
 </resources>
