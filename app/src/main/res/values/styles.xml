@@ -28,4 +28,16 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">12%</item>
     </style>
+
+    <style name="MyMaterialAlertDialog" parent="@style/ThemeOverlay.Material3.MaterialAlertDialog.Centered">
+        <item name="buttonBarPositiveButtonStyle">@style/OutlinedButton</item>
+        <item name="buttonBarNegativeButtonStyle">@style/OutlinedButton</item>
+        <item name="buttonBarNeutralButtonStyle">@style/OutlinedButton</item>
+    </style>
+
+    <style name="OutlinedButton" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="strokeColor">@color/colorPrimary</item>
+        <item name="strokeWidth">1dp</item>
+    </style>
+
 </resources>
