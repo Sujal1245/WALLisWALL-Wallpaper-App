@@ -7,10 +7,14 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
@@ -37,6 +41,9 @@ public class Wallpaper extends AppCompatActivity {
     private WallpaperManager wallpaperManager;
     private int flag = 0;
 
+    private boolean fav;
+    private FavouritesHelper helper;
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +58,7 @@ public class Wallpaper extends AppCompatActivity {
         }
 
         int position = getIntent().getIntExtra("Position", 0);
+        helper = new FavouritesHelper(getPreferences(MODE_PRIVATE), "Wall" + (position + 1));
         View endView = findViewById(R.id.linearL);
         ViewCompat.setTransitionName(endView, "Wall" + (position + 1) + "_Transition");
         setEnterSharedElementCallback(new MaterialContainerTransformSharedElementCallback());
@@ -102,8 +110,7 @@ public class Wallpaper extends AppCompatActivity {
         });
     }
 
-    public void doStuffInBackground()
-    {
+    public void doStuffInBackground() {
         new Thread(() -> {
             // Run whatever background code you want here.
             wallpaper = ((BitmapDrawable) wall.getDrawable()).getBitmap();
@@ -167,5 +174,34 @@ public class Wallpaper extends AppCompatActivity {
                 setOnBoth();
             }
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_one, menu);
+
+        fav = helper.isFav();
+
+        if (fav) {
+            menu.findItem(R.id.fav_toggle).setIcon(R.drawable.ic_baseline_favorite_24);
+        } else {
+            menu.findItem(R.id.fav_toggle).setIcon(R.drawable.ic_baseline_favorite_border_24);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.fav_toggle) {
+            if (fav) {
+                helper.removeFav();
+            } else {
+                helper.addFavourite();
+            }
+            fav = !fav;
+            invalidateOptionsMenu();
+        }
+        return true;
     }
 }
