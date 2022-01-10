@@ -24,6 +24,7 @@ import androidx.core.view.ViewCompat;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.transition.platform.MaterialContainerTransform;
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback;
@@ -34,6 +35,7 @@ import java.io.IOException;
 
 public class Wallpaper extends AppCompatActivity {
 
+    private View endView;
     private ImageView wall;
     private CircularProgressIndicator loadIn;
     private ExtendedFloatingActionButton applyWall;
@@ -41,8 +43,10 @@ public class Wallpaper extends AppCompatActivity {
     private WallpaperManager wallpaperManager;
     private int flag = 0;
 
+    private static final String spFileKey = "WallisWall.SECRET_FILE";
     private boolean fav;
     private FavouritesHelper helper;
+    private String wall_name;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -58,8 +62,9 @@ public class Wallpaper extends AppCompatActivity {
         }
 
         int position = getIntent().getIntExtra("Position", 0);
-        helper = new FavouritesHelper(getPreferences(MODE_PRIVATE), "Wall" + (position + 1));
-        View endView = findViewById(R.id.linearL);
+        wall_name = "Wall" + (position + 1);
+        helper = new FavouritesHelper(getSharedPreferences(spFileKey, MODE_PRIVATE));
+        endView = findViewById(R.id.linearL);
         ViewCompat.setTransitionName(endView, "Wall" + (position + 1) + "_Transition");
         setEnterSharedElementCallback(new MaterialContainerTransformSharedElementCallback());
         getWindow().setSharedElementEnterTransition(new MaterialContainerTransform().addTarget(R.id.linearL).setDuration(300L));
@@ -181,7 +186,7 @@ public class Wallpaper extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_one, menu);
 
-        fav = helper.isFav();
+        fav = helper.isFav(wall_name);
 
         if (fav) {
             menu.findItem(R.id.fav_toggle).setIcon(R.drawable.ic_baseline_favorite_24);
@@ -194,11 +199,15 @@ public class Wallpaper extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.fav_toggle) {
+            String msg;
             if (fav) {
-                helper.removeFav();
+                helper.removeFav(wall_name);
+                msg = "Wall removed from Fav :(";
             } else {
-                helper.addFavourite();
+                helper.addFavourite(wall_name);
+                msg = "Wall added to Fav :)";
             }
+            Snackbar.make(endView, msg, BaseTransientBottomBar.LENGTH_SHORT).show();
             fav = !fav;
             invalidateOptionsMenu();
         }

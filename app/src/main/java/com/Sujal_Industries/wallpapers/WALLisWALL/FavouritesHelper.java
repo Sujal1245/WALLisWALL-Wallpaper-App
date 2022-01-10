@@ -11,31 +11,28 @@ import java.util.HashMap;
 public class FavouritesHelper {
 
     private SharedPreferences sp;
-    private String wall_name;
     private HashMap<String, Boolean> favs;
 
-    private FavouritesHelper() {
-    }
+    private FavouritesHelper() {}
 
-    public FavouritesHelper(SharedPreferences sp, String wall_name) {
+    public FavouritesHelper(SharedPreferences sp) {
         this.sp = sp;
-        this.wall_name = wall_name;
     }
 
-    public void addFavourite() {
+    public void addFavourite(String wall_name) {
         favs = getFavourites();
         favs.put(wall_name, true);
         setFavourties();
 
     }
 
-    public void removeFav() {
+    public void removeFav(String wall_name) {
         favs = getFavourites();
         favs.put(wall_name, false);
         setFavourties();
     }
 
-    public void setFavourties() {
+    private void setFavourties() {
         SharedPreferences.Editor pe = sp.edit();
         Gson gson = new Gson();
         String j = gson.toJson(favs);
@@ -56,7 +53,7 @@ public class FavouritesHelper {
         }
     }
 
-    public boolean isFav() {
+    public boolean isFav(String wall_name) {
         favs = getFavourites();
         if (favs.containsKey(wall_name)) {
             return favs.get(wall_name);

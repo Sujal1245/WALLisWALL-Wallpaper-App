@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,12 +22,14 @@ import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements RecyclerAdapter.OnImageListener {
@@ -42,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
     private LinearLayoutCompat setting1;
     private static final String spFileKey = "WallisWall.SECRET_FILE";
     private boolean isNight;
+    private FavouritesHelper helper;
 
     @SuppressLint({"NotifyDataSetChanged", "NonConstantResourceId"})
     @Override
@@ -65,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
         setting1 = findViewById(R.id.settingsLinear1);
 
         SharedPreferences sharedPreferences = getSharedPreferences(spFileKey, MODE_PRIVATE);
+        helper = new FavouritesHelper(sharedPreferences);
         isNight = sharedPreferences.getBoolean("isNight", false);
         if (isNight) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
@@ -82,7 +87,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
         recyclerView.setLayoutManager(layoutManager);
         adapter = new RecyclerAdapter(images, this);
         recyclerView.setAdapter(adapter);
-
         recyclerView.setVisibility(View.INVISIBLE);
         container.startShimmer();
 
@@ -97,22 +101,50 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
                     container.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.VISIBLE);
                     bottomNavBar.setVisibility(View.VISIBLE);
+
                     adapter.notifyDataSetChanged();
+                    animateRecyclerView();
 
                     bottomNavBar.setOnItemSelectedListener(item -> {
                         switch (item.getItemId()) {
                             case R.id.main_page: {
                                 recyclerView.setVisibility(View.VISIBLE);
                                 setting1.setVisibility(View.GONE);
+                                images.clear();
+                                images.addAll(listResult.getItems());
+                                adapter.notifyDataSetChanged();
+                                animateRecyclerView();
                                 return true;
                             }
                             case R.id.fav_page: {
-                                Snackbar.make(findViewById(R.id.mainCoord), "Under Construction :)", Snackbar.LENGTH_SHORT).show();
+                                recyclerView.setVisibility(View.VISIBLE);
+                                setting1.setVisibility(View.GONE);
+                                int i = 0;
+                                HashMap<String, Boolean> favs = helper.getFavourites();
+                                ArrayList<StorageReference> nonFavs = new ArrayList<>();
+                                for (StorageReference image:images) {
+                                    String wall_name = "Wall" + (i + 1);
+                                    boolean fav = (favs.containsKey(wall_name))?(favs.get(wall_name)):false;
+                                    if(!fav)
+                                    {
+                                        nonFavs.add(images.get(i));
+                                    }
+                                    i++;
+                                }
+                                images.removeAll(nonFavs);
+                                adapter.notifyDataSetChanged();
+                                animateRecyclerView();
+                                if(images.isEmpty())
+                                {
+                                    Snackbar.make(findViewById(R.id.mainCoord), "Nothing here yet :)", BaseTransientBottomBar.LENGTH_SHORT).show();
+                                }
                                 return true;
                             }
                             case R.id.set_page: {
                                 recyclerView.setVisibility(View.GONE);
                                 setting1.setVisibility(View.VISIBLE);
+                                images.clear();
+                                images.addAll(listResult.getItems());
                                 observeChoice();
                                 return true;
                             }
@@ -145,6 +177,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
 
     public void observeChoice() {
         themeToggle.setOnCheckedChangeListener((group, checkedId) -> {
+            bottomNavBar.setSelectedItemId(R.id.main_page);
             SharedPreferences sharedPreferences = getSharedPreferences(spFileKey, MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             if (!isNight) {
@@ -156,5 +189,28 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
             }
             editor.apply();
         });
+    }
+
+    public void animateRecyclerView()
+    {
+        recyclerView.getViewTreeObserver().addOnPreDrawListener(
+                new ViewTreeObserver.OnPreDrawListener() {
+
+                    @Override
+                    public boolean onPreDraw() {
+                        recyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
+
+                        for (int i = 0; i < recyclerView.getChildCount(); i++) {
+                            View v = recyclerView.getChildAt(i);
+                            v.setAlpha(0.0f);
+                            v.animate().alpha(1.0f)
+                                    .setDuration(300)
+                                    .setStartDelay(i * 50)
+                                    .start();
+                        }
+
+                        return true;
+                    }
+                });
     }
 }
