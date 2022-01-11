@@ -62,7 +62,6 @@ public class Wallpaper extends AppCompatActivity {
         }
 
         int position = getIntent().getIntExtra("Position", 0);
-        wall_name = "Wall" + (position + 1);
         helper = new FavouritesHelper(getSharedPreferences(spFileKey, MODE_PRIVATE));
         endView = findViewById(R.id.linearL);
         ViewCompat.setTransitionName(endView, "Wall" + (position + 1) + "_Transition");
@@ -78,6 +77,8 @@ public class Wallpaper extends AppCompatActivity {
         StorageReference wallRef = FirebaseStorage.getInstance().getReference(getIntent().getStringExtra("StorageRef"));
 
         GlideApp.with(getApplicationContext()).load(wallRef).into(wall);
+
+        wall_name = wallRef.getName();
 
         applyWall = findViewById(R.id.applyWall);
         applyWall.setOnClickListener(v -> {

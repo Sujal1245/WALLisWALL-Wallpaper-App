@@ -40,7 +40,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ImageV
         holder.itemView.getLayoutParams().width = (displayMetrics.widthPixels / 2) - 28;
         StorageReference sr = images.get(position);
         GlideApp.with(holder.itemView.getContext()).load(sr).thumbnail(0.2f).placeholder(R.drawable.ic_baseline_collections_24).into(holder.Album);
-        holder.AlbumTitle.setText(giveName(position));
+        holder.AlbumTitle.setText(giveName(sr.getName()));
 
         ViewCompat.setTransitionName(holder.itemView, "Wall" + (position + 1) + "_Transition");
     }
@@ -50,8 +50,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ImageV
         return images.size();
     }
 
-    public static String giveName(int position) {
-        return "Wall " + (position + 1);
+    public String giveName(String file_name) {
+        return file_name.substring(0, file_name.lastIndexOf('.'));
     }
 
     public static class ImageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

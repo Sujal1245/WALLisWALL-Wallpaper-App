@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
                                 HashMap<String, Boolean> favs = helper.getFavourites();
                                 ArrayList<StorageReference> nonFavs = new ArrayList<>();
                                 for (StorageReference image:images) {
-                                    String wall_name = "Wall" + (i + 1);
+                                    String wall_name = image.getName();
                                     boolean fav = (favs.containsKey(wall_name))?(favs.get(wall_name)):false;
                                     if(!fav)
                                     {
