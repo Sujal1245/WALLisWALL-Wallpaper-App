@@ -122,11 +122,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
                                 int i = 0;
                                 HashMap<String, Boolean> favs = helper.getFavourites();
                                 ArrayList<StorageReference> nonFavs = new ArrayList<>();
-                                for (StorageReference image:images) {
+                                for (StorageReference image : images) {
                                     String wall_name = image.getName();
-                                    boolean fav = (favs.containsKey(wall_name))?(favs.get(wall_name)):false;
-                                    if(!fav)
-                                    {
+                                    boolean fav = (favs.containsKey(wall_name)) ? (favs.get(wall_name)) : false;
+                                    if (!fav) {
                                         nonFavs.add(images.get(i));
                                     }
                                     i++;
@@ -134,8 +133,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
                                 images.removeAll(nonFavs);
                                 adapter.notifyDataSetChanged();
                                 animateRecyclerView();
-                                if(images.isEmpty())
-                                {
+                                if (images.isEmpty()) {
                                     Snackbar.make(findViewById(R.id.mainCoord), "Nothing here yet :)", BaseTransientBottomBar.LENGTH_SHORT).show();
                                 }
                                 return true;
@@ -191,11 +189,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
         });
     }
 
-    public void animateRecyclerView()
-    {
+    public void animateRecyclerView() {
         recyclerView.getViewTreeObserver().addOnPreDrawListener(
                 new ViewTreeObserver.OnPreDrawListener() {
-
                     @Override
                     public boolean onPreDraw() {
                         recyclerView.getViewTreeObserver().removeOnPreDrawListener(this);

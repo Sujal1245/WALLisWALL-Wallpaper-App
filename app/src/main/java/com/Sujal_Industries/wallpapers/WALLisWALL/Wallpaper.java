@@ -76,7 +76,7 @@ public class Wallpaper extends AppCompatActivity {
 
         StorageReference wallRef = FirebaseStorage.getInstance().getReference(getIntent().getStringExtra("StorageRef"));
 
-        GlideApp.with(getApplicationContext()).load(wallRef).into(wall);
+        GlideApp.with(getApplicationContext()).load(wallRef).placeholder(R.drawable.ic_baseline_collections_24).into(wall);
 
         wall_name = wallRef.getName();
 

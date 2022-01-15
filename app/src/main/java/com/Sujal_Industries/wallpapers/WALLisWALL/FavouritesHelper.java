@@ -13,7 +13,8 @@ public class FavouritesHelper {
     private SharedPreferences sp;
     private HashMap<String, Boolean> favs;
 
-    private FavouritesHelper() {}
+    private FavouritesHelper() {
+    }
 
     public FavouritesHelper(SharedPreferences sp) {
         this.sp = sp;
