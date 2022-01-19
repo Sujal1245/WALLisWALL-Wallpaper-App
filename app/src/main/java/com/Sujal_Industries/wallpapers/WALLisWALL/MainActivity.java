@@ -2,16 +2,19 @@ package com.Sujal_Industries.wallpapers.WALLisWALL;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.splashscreen.SplashScreen;
 import androidx.core.view.ViewCompat;
@@ -19,13 +22,17 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
@@ -42,7 +49,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
     private ChipGroup themeToggle;
     private Chip darkChip;
     private Chip lightChip;
-    private LinearLayoutCompat setting1;
+    private MaterialCardView settings;
+    private MaterialButton clearFavsButton;
     private static final String spFileKey = "WallisWall.SECRET_FILE";
     private boolean isNight;
     private FavouritesHelper helper;
@@ -66,7 +74,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
         themeToggle = findViewById(R.id.themeToggle);
         darkChip = findViewById(R.id.turnDark);
         lightChip = findViewById(R.id.turnLight);
-        setting1 = findViewById(R.id.settingsLinear1);
+        settings = findViewById(R.id.settingsCard);
+        clearFavsButton = findViewById(R.id.clear_fav_button);
 
         SharedPreferences sharedPreferences = getSharedPreferences(spFileKey, MODE_PRIVATE);
         helper = new FavouritesHelper(sharedPreferences);
@@ -108,46 +117,19 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
                     bottomNavBar.setOnItemSelectedListener(item -> {
                         switch (item.getItemId()) {
                             case R.id.main_page: {
-                                recyclerView.setVisibility(View.VISIBLE);
-                                setting1.setVisibility(View.GONE);
-                                images.clear();
-                                images.addAll(listResult.getItems());
-                                adapter.notifyDataSetChanged();
-                                animateRecyclerView();
+                                setUpMainPage(listResult);
                                 return true;
                             }
                             case R.id.fav_page: {
-                                recyclerView.setVisibility(View.VISIBLE);
-                                setting1.setVisibility(View.GONE);
-                                int i = 0;
-                                HashMap<String, Boolean> favs = helper.getFavourites();
-                                ArrayList<StorageReference> nonFavs = new ArrayList<>();
-                                for (StorageReference image : images) {
-                                    String wall_name = image.getName();
-                                    boolean fav = (favs.containsKey(wall_name)) ? (favs.get(wall_name)) : false;
-                                    if (!fav) {
-                                        nonFavs.add(images.get(i));
-                                    }
-                                    i++;
-                                }
-                                images.removeAll(nonFavs);
-                                adapter.notifyDataSetChanged();
-                                animateRecyclerView();
-                                if (images.isEmpty()) {
-                                    Snackbar.make(findViewById(R.id.mainCoord), "Nothing here yet :)", BaseTransientBottomBar.LENGTH_SHORT).show();
-                                }
+                                setUpFavPage();
                                 return true;
                             }
                             case R.id.set_page: {
-                                recyclerView.setVisibility(View.GONE);
-                                setting1.setVisibility(View.VISIBLE);
-                                images.clear();
-                                images.addAll(listResult.getItems());
-                                observeChoice();
+                                setUpSettingsPage(listResult);
                                 return true;
                             }
                             default:
-                                return true;
+                                return false;
                         }
                     });
                 })
@@ -159,6 +141,47 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
                     Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
 
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void setUpMainPage(ListResult listResult) {
+        recyclerView.setVisibility(View.VISIBLE);
+        settings.setVisibility(View.GONE);
+        images.clear();
+        images.addAll(listResult.getItems());
+        adapter.notifyDataSetChanged();
+        animateRecyclerView();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void setUpFavPage() {
+        recyclerView.setVisibility(View.VISIBLE);
+        settings.setVisibility(View.GONE);
+        int i = 0;
+        HashMap<String, Boolean> favs = helper.getFavourites();
+        ArrayList<StorageReference> nonFavs = new ArrayList<>();
+        for (StorageReference image : images) {
+            String wall_name = image.getName();
+            boolean fav = (favs.containsKey(wall_name)) ? (favs.get(wall_name)) : false;
+            if (!fav) {
+                nonFavs.add(images.get(i));
+            }
+            i++;
+        }
+        images.removeAll(nonFavs);
+        adapter.notifyDataSetChanged();
+        animateRecyclerView();
+        if (images.isEmpty()) {
+            Toast.makeText(this, "Nothing here yet :)", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void setUpSettingsPage(ListResult listResult) {
+        recyclerView.setVisibility(View.GONE);
+        settings.setVisibility(View.VISIBLE);
+        images.clear();
+        images.addAll(listResult.getItems());
+        observeChoice();
     }
 
     @Override
@@ -174,6 +197,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
     }
 
     public void observeChoice() {
+        //Setting(1) below
         themeToggle.setOnCheckedChangeListener((group, checkedId) -> {
             bottomNavBar.setSelectedItemId(R.id.main_page);
             SharedPreferences sharedPreferences = getSharedPreferences(spFileKey, MODE_PRIVATE);
@@ -186,6 +210,22 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
                 editor.putBoolean("isNight", false);
             }
             editor.apply();
+        });
+
+        //Setting(2) below
+        clearFavsButton.setOnClickListener(view -> {
+            AlertDialog dialog = new MaterialAlertDialogBuilder(this)
+                    .setTitle("Clear Favourites?")
+                    .setMessage("Note: You won't be able to undo this task.")
+                    .setPositiveButton("Yes", (dialogInterface, i) -> {
+                        helper.clearFavs();
+                        Toast.makeText(this, "Success!", Toast.LENGTH_SHORT).show();
+                    })
+                    .setNegativeButton("No", (dialogInterface, i) -> {
+
+                    })
+                    .create();
+            dialog.show();
         });
     }
 
@@ -201,7 +241,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
                             v.setAlpha(0.0f);
                             v.animate().alpha(1.0f)
                                     .setDuration(300)
-                                    .setStartDelay(i * 50)
+                                    .setStartDelay(i * 101L)
                                     .start();
                         }
 

@@ -9,7 +9,6 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 
 public class FavouritesHelper {
-
     private SharedPreferences sp;
     private HashMap<String, Boolean> favs;
 
@@ -61,5 +60,12 @@ public class FavouritesHelper {
         } else {
             return false;
         }
+    }
+
+    public void clearFavs()
+    {
+        favs = getFavourites();
+        favs.clear();
+        setFavourties();
     }
 }

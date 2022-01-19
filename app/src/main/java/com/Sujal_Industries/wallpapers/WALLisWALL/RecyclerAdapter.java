@@ -39,8 +39,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ImageV
         ((Activity) holder.itemView.getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         holder.itemView.getLayoutParams().width = (displayMetrics.widthPixels / 2) - 28;
         StorageReference sr = images.get(position);
-        GlideApp.with(holder.itemView.getContext()).load(sr).thumbnail(0.2f).placeholder(R.drawable.ic_baseline_collections_24).into(holder.Album);
-        holder.AlbumTitle.setText(giveName(sr.getName()));
+        GlideApp.with(holder.itemView.getContext())
+                .load(sr)
+                .thumbnail(0.2f)
+                .placeholder(R.drawable.background_splash)
+                .into(holder.album);
+        holder.albumTitle.setText(giveName(sr.getName()));
 
         ViewCompat.setTransitionName(holder.itemView, "Wall" + (position + 1) + "_Transition");
     }
@@ -55,14 +59,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ImageV
     }
 
     public static class ImageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        final ImageView Album;
-        final TextView AlbumTitle;
+        final ImageView album;
+        final TextView albumTitle;
         final OnImageListener onImageListener;
 
         public ImageViewHolder(@NonNull View itemView, OnImageListener onImageListener) {
             super(itemView);
-            Album = itemView.findViewById(R.id.album);
-            AlbumTitle = itemView.findViewById(R.id.album_title);
+
+            this.album = itemView.findViewById(R.id.album);
+            this.albumTitle = itemView.findViewById(R.id.album_title);
             this.onImageListener = onImageListener;
 
             itemView.setOnClickListener(this);

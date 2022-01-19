@@ -15,7 +15,7 @@
         android:layout_gravity="center"
         app:shimmer_auto_start="false">
 
-        <LinearLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -25,7 +25,7 @@
             <include layout="@layout/shimmer_layout" />
 
             <include layout="@layout/shimmer_layout" />
-        </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
     </com.facebook.shimmer.ShimmerFrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -34,52 +34,97 @@
         android:layout_height="match_parent"
         android:scrollbars="vertical" />
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/settingsLinear1"
+    <!--Settings Page below-->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/settingsCard"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="10dp"
-        android:visibility="gone">
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:visibility="gone"
+        app:cardCornerRadius="25dp">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:padding="5dp"
-            android:text="@string/theme"
-            android:textSize="18sp" />
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/themeToggle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:selectionRequired="true"
-            app:singleSelection="true">
-
-            <com.google.android.material.chip.Chip
-                android:layout_width="wrap_content"
+            <!--Setting(1)-->
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/turnDark"
-                android:checkable="true"
-                android:clickable="true"
-                android:focusable="true"
-                android:text="@string/dark"
-                app:chipIcon="@drawable/ic_baseline_nights_stay_24"/>
+                android:gravity="center"
+                android:padding="10dp">
 
-            <com.google.android.material.chip.Chip
-                android:layout_width="wrap_content"
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:padding="10dp"
+                    android:text="@string/theme"
+                    android:textSize="24sp" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/themeToggle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:selectionRequired="true"
+                    app:singleSelection="true">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/turnDark"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checkable="true"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:text="@string/dark"
+                        app:chipIcon="@drawable/ic_baseline_nights_stay_24" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/turnLight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checkable="true"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:text="@string/light"
+                        app:chipIcon="@drawable/ic_baseline_wb_sunny_24" />
+
+                </com.google.android.material.chip.ChipGroup>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <!--Setting(2)-->
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/turnLight"
-                android:checkable="true"
-                android:clickable="true"
-                android:focusable="true"
-                android:text="@string/light"
-                app:chipIcon="@drawable/ic_baseline_wb_sunny_24"/>
+                android:gravity="center"
+                android:padding="10dp">
 
-        </com.google.android.material.chip.ChipGroup>
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="@string/clear_my_favourites"
+                    android:textSize="24sp" />
 
-    </androidx.appcompat.widget.LinearLayoutCompat>
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/clear_fav_button"
+                    android:insetLeft="0dp"
+                    android:insetTop="0dp"
+                    android:insetRight="0dp"
+                    android:insetBottom="0dp"
+                    app:cornerRadius="5dp"
+                    app:backgroundTint="@android:color/holo_red_light"
+                    app:icon="@drawable/ic_baseline_delete_outline_24"
+                    app:iconGravity="textStart"
+                    app:iconPadding="0dp"/>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
