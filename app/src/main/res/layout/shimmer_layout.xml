@@ -12,13 +12,15 @@
         android:layout_margin="7dp"
         android:layout_weight="1"
         app:cardCornerRadius="25dp"
-        app:cardElevation="12dp">
+        app:cardElevation="12dp"
+        app:strokeWidth="0dp">
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="210dp"
             android:backgroundTint="@android:color/darker_gray"
-            app:shapeAppearanceOverlay="@style/ImageCircleTheme" />
+            app:shapeAppearanceOverlay="@style/ImageCircleTheme"
+            app:strokeWidth="0dp"/>
 
         <View
             android:layout_width="match_parent"
@@ -36,13 +38,16 @@
         android:layout_margin="7dp"
         android:layout_weight="1"
         app:cardCornerRadius="25dp"
-        app:cardElevation="12dp">
+        app:cardElevation="12dp"
+        app:strokeWidth="0dp">
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="210dp"
             android:backgroundTint="@android:color/darker_gray"
-            app:shapeAppearanceOverlay="@style/ImageCircleTheme" />
+            app:shapeAppearanceOverlay="@style/ImageCircleTheme"
+            app:cardElevation="12dp"
+            app:strokeWidth="0dp"/>
 
         <View
             android:layout_width="match_parent"

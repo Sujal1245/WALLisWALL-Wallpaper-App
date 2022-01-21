@@ -106,9 +106,9 @@ public class Wallpaper extends AppCompatActivity {
 
             dialog.show();
 
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT); //create a new one
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             layoutParams.weight = 1.0f;
-            layoutParams.gravity = Gravity.CENTER; //this is layout_gravity
+            layoutParams.gravity = Gravity.CENTER;
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setLayoutParams(layoutParams);
             dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setLayoutParams(layoutParams);
             dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setLayoutParams(layoutParams);
@@ -167,21 +167,9 @@ public class Wallpaper extends AppCompatActivity {
 
     public void setWall() {
         switch (flag) {
-            case 123: {
-                setOnHome();
-                break;
-            }
-            case 456: {
-                setOnLock();
-                break;
-            }
-            case 789: {
-                setOnBoth();
-                break;
-            }
-            default: {
-                setOnBoth();
-            }
+            case 123 -> setOnHome();
+            case 456 -> setOnLock();
+            case 789 -> setOnBoth();
         }
     }
 

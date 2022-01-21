@@ -10,7 +10,7 @@
         <entry key="..\:/Users/wwwsu/AndroidStudioProjects/WALLisWALL/app/src/main/res/drawable/ic_baseline_lock_24.xml" value="0.1" />
         <entry key="..\:/Users/wwwsu/AndroidStudioProjects/WALLisWALL/app/src/main/res/drawable/ic_launcher_background.xml" value="0.12105263157894737" />
         <entry key="..\:/Users/wwwsu/AndroidStudioProjects/WALLisWALL/app/src/main/res/drawable/rounded_corners.xml" value="0.12105263157894737" />
-        <entry key="..\:/Users/wwwsu/AndroidStudioProjects/WALLisWALL/app/src/main/res/layout/activity_main.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/wwwsu/AndroidStudioProjects/WALLisWALL/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/Users/wwwsu/AndroidStudioProjects/WALLisWALL/app/src/main/res/layout/activity_wallpaper.xml" value="0.1" />
         <entry key="..\:/Users/wwwsu/AndroidStudioProjects/WALLisWALL/app/src/main/res/layout/album_layout.xml" value="0.17552083333333332" />
         <entry key="..\:/Users/wwwsu/AndroidStudioProjects/WALLisWALL/app/src/main/res/layout/rounded_corner.xml" value="0.11085526315789473" />
@@ -26,5 +26,5 @@
     </option>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_X" project-jdk-name="11" project-jdk-type="JavaSDK" />
 </project>

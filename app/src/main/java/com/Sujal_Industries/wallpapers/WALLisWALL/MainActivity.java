@@ -2,19 +2,18 @@ package com.Sujal_Industries.wallpapers.WALLisWALL;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.splashscreen.SplashScreen;
 import androidx.core.view.ViewCompat;
@@ -28,8 +27,6 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationBarView;
-import com.google.android.material.snackbar.BaseTransientBottomBar;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
@@ -47,15 +44,12 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
     private ShimmerFrameLayout container;
     private NavigationBarView bottomNavBar;
     private ChipGroup themeToggle;
-    private Chip darkChip;
-    private Chip lightChip;
     private MaterialCardView settings;
     private MaterialButton clearFavsButton;
     private static final String spFileKey = "WallisWall.SECRET_FILE";
     private boolean isNight;
     private FavouritesHelper helper;
 
-    @SuppressLint({"NotifyDataSetChanged", "NonConstantResourceId"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setExitSharedElementCallback(new MaterialContainerTransformSharedElementCallback());
@@ -67,13 +61,14 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
 
         setContentView(R.layout.activity_main);
 
+        Chip darkChip = findViewById(R.id.turnDark);
+        Chip lightChip = findViewById(R.id.turnLight);
+
         images = new ArrayList<>();
         container = findViewById(R.id.shimmerContainer);
         recyclerView = findViewById(R.id.recyclerView);
         bottomNavBar = findViewById(R.id.bottom_navigation);
         themeToggle = findViewById(R.id.themeToggle);
-        darkChip = findViewById(R.id.turnDark);
-        lightChip = findViewById(R.id.turnLight);
         settings = findViewById(R.id.settingsCard);
         clearFavsButton = findViewById(R.id.clear_fav_button);
 
@@ -94,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new RecyclerAdapter(images, this);
+        adapter = new RecyclerAdapter(images, this, getScreenWidthPixels(MainActivity.this));
         recyclerView.setAdapter(adapter);
         recyclerView.setVisibility(View.INVISIBLE);
         container.startShimmer();
@@ -105,32 +100,21 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
         listRef.listAll()
                 .addOnSuccessListener(listResult -> {
                     // All the items under listRef.
-                    images.addAll(listResult.getItems());
                     container.stopShimmer();
-                    container.setVisibility(View.GONE);
-                    recyclerView.setVisibility(View.VISIBLE);
-                    bottomNavBar.setVisibility(View.VISIBLE);
-
-                    adapter.notifyDataSetChanged();
-                    animateRecyclerView();
+                    completeLoading(listResult);
 
                     bottomNavBar.setOnItemSelectedListener(item -> {
-                        switch (item.getItemId()) {
-                            case R.id.main_page: {
-                                setUpMainPage(listResult);
-                                return true;
-                            }
-                            case R.id.fav_page: {
-                                setUpFavPage();
-                                return true;
-                            }
-                            case R.id.set_page: {
-                                setUpSettingsPage(listResult);
-                                return true;
-                            }
-                            default:
-                                return false;
+                        int itemId = item.getItemId();
+                        if (itemId == R.id.main_page) {
+                            setUpMainPage(listResult);
+                        } else if (itemId == R.id.fav_page) {
+                            setUpFavPage();
+                        } else if (itemId == R.id.set_page) {
+                            setUpSettingsPage(listResult);
+                        } else {
+                            return false;
                         }
+                        return true;
                     });
                 })
                 .addOnFailureListener(e -> {
@@ -144,16 +128,30 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
     }
 
     @SuppressLint("NotifyDataSetChanged")
+    public void refreshRecyclerView() {
+        adapter.notifyDataSetChanged();
+        animateRecyclerView();
+    }
+
+
+    public void completeLoading(ListResult listResult) {
+        images.addAll(listResult.getItems());
+
+        container.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
+        bottomNavBar.setVisibility(View.VISIBLE);
+
+        refreshRecyclerView();
+    }
+
     public void setUpMainPage(ListResult listResult) {
         recyclerView.setVisibility(View.VISIBLE);
         settings.setVisibility(View.GONE);
         images.clear();
         images.addAll(listResult.getItems());
-        adapter.notifyDataSetChanged();
-        animateRecyclerView();
+        refreshRecyclerView();
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     public void setUpFavPage() {
         recyclerView.setVisibility(View.VISIBLE);
         settings.setVisibility(View.GONE);
@@ -162,15 +160,15 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
         ArrayList<StorageReference> nonFavs = new ArrayList<>();
         for (StorageReference image : images) {
             String wall_name = image.getName();
-            boolean fav = (favs.containsKey(wall_name)) ? (favs.get(wall_name)) : false;
+            //noinspection ConstantConditions
+            boolean fav = favs.containsKey(wall_name) ? favs.get(wall_name) : false;
             if (!fav) {
                 nonFavs.add(images.get(i));
             }
             i++;
         }
         images.removeAll(nonFavs);
-        adapter.notifyDataSetChanged();
-        animateRecyclerView();
+        refreshRecyclerView();
         if (images.isEmpty()) {
             Toast.makeText(this, "Nothing here yet :)", Toast.LENGTH_SHORT).show();
         }
@@ -222,7 +220,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
                         Toast.makeText(this, "Success!", Toast.LENGTH_SHORT).show();
                     })
                     .setNegativeButton("No", (dialogInterface, i) -> {
-
                     })
                     .create();
             dialog.show();
@@ -248,5 +245,15 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
                         return true;
                     }
                 });
+    }
+
+    public static int getScreenWidthPixels(AppCompatActivity context) {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            context.getDisplay().getRealMetrics(displayMetrics);
+        } else {
+            context.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        }
+        return displayMetrics.widthPixels;
     }
 }

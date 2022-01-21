@@ -13,7 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        app:shimmer_auto_start="false">
+        app:shimmer_auto_start="false"
+        app:shimmer_dropoff="1">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"

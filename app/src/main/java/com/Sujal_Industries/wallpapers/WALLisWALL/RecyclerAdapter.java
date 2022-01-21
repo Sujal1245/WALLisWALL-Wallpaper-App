@@ -1,7 +1,5 @@
 package com.Sujal_Industries.wallpapers.WALLisWALL;
 
-import android.app.Activity;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,10 +18,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ImageV
 
     private final ArrayList<StorageReference> images;
     private final OnImageListener mOnImageListener;
+    private final int widthPixels;
 
-    public RecyclerAdapter(ArrayList<StorageReference> images, OnImageListener onImageListener) {
+    public RecyclerAdapter(ArrayList<StorageReference> images, OnImageListener onImageListener, int widthPixels) {
         this.images = images;
         this.mOnImageListener = onImageListener;
+        this.widthPixels = widthPixels;
     }
 
     @NonNull
@@ -35,9 +35,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ImageV
 
     @Override
     public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        ((Activity) holder.itemView.getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        holder.itemView.getLayoutParams().width = (displayMetrics.widthPixels / 2) - 28;
+        holder.itemView.getLayoutParams().width = (widthPixels / 2) - 28;
+
         StorageReference sr = images.get(position);
         GlideApp.with(holder.itemView.getContext())
                 .load(sr)
