@@ -2,11 +2,14 @@ package com.Sujal_Industries.wallpapers.WALLisWALL;
 
 import android.content.SharedPreferences;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class FavouritesHelper {
     private SharedPreferences sp;
@@ -15,18 +18,17 @@ public class FavouritesHelper {
     private FavouritesHelper() {
     }
 
-    public FavouritesHelper(SharedPreferences sp) {
+    public FavouritesHelper(@NonNull SharedPreferences sp) {
         this.sp = sp;
     }
 
-    public void addFavourite(String wall_name) {
+    public void addFavourite(@NonNull String wall_name) {
         favs = getFavourites();
         favs.put(wall_name, true);
         setFavourties();
-
     }
 
-    public void removeFav(String wall_name) {
+    public void removeFav(@NonNull String wall_name) {
         favs = getFavourites();
         favs.put(wall_name, false);
         setFavourties();
@@ -53,13 +55,12 @@ public class FavouritesHelper {
         }
     }
 
-    public boolean isFav(String wall_name) {
+    public boolean isFav(@NonNull String wall_name) {
         favs = getFavourites();
         if (favs.containsKey(wall_name)) {
-            return favs.get(wall_name);
-        } else {
-            return false;
+            return Objects.requireNonNull(favs.get(wall_name));
         }
+        return false;
     }
 
     public void clearFavs()
