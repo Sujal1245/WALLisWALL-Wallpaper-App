@@ -10,4 +10,7 @@
     <string name="light">Light</string>
     <string name="theme">Theme:</string>
     <string name="clear_my_favourites">Clear my favourites:</string>
+    <string name="shuffled_walls">Shuffled Walls</string>
+    <string name="on">ON</string>
+    <string name="off">OFF</string>
 </resources>

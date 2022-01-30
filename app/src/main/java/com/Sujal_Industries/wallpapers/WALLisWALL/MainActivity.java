@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -33,6 +34,7 @@ import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -46,9 +48,13 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
     private ChipGroup themeToggle;
     private MaterialCardView settings;
     private MaterialButton clearFavsButton;
+    private MaterialButtonToggleGroup shuffleToggle;
+    private MaterialButton setting3_on;
+    private MaterialButton setting3_off;
     private static final String spFileKey = "WallisWall.SECRET_FILE";
     private boolean isNight;
     private FavouritesHelper helper;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +77,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
         themeToggle = findViewById(R.id.themeToggle);
         settings = findViewById(R.id.settingsCard);
         clearFavsButton = findViewById(R.id.clear_fav_button);
+        shuffleToggle = findViewById(R.id.setting3_toggle);
+        setting3_on = findViewById(R.id.setting3_on);
+        setting3_off=findViewById(R.id.setting3_off);
 
-        SharedPreferences sharedPreferences = getSharedPreferences(spFileKey, MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(spFileKey, MODE_PRIVATE);
         helper = new FavouritesHelper(sharedPreferences);
         isNight = sharedPreferences.getBoolean("isNight", false);
         if (isNight) {
@@ -129,6 +138,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
 
     @SuppressLint("NotifyDataSetChanged")
     public void refreshRecyclerView() {
+        if(sharedPreferences.getBoolean("Shuffle?", false))
+        {
+            Collections.shuffle(images);
+        }
         adapter.notifyDataSetChanged();
         animateRecyclerView();
     }
@@ -198,7 +211,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
         //Setting(1) below
         themeToggle.setOnCheckedChangeListener((group, checkedId) -> {
             bottomNavBar.setSelectedItemId(R.id.main_page);
-            SharedPreferences sharedPreferences = getSharedPreferences(spFileKey, MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             if (!isNight) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
@@ -223,6 +235,27 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
                     })
                     .create();
             dialog.show();
+        });
+
+        //Setting(3) below
+
+        boolean currentShuffle = sharedPreferences.getBoolean("Shuffle?", false);
+
+        if(currentShuffle)
+        {
+            setting3_on.setChecked(true);
+        }
+        else
+        {
+            setting3_off.setChecked(true);
+        }
+
+        shuffleToggle.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
+            if(isChecked) {
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("Shuffle?", checkedId == R.id.setting3_on);
+                editor.apply();
+            }
         });
     }
 
