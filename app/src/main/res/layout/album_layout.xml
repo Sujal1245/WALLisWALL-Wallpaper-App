@@ -17,9 +17,10 @@
             android:id="@+id/album"
             android:layout_width="match_parent"
             android:layout_height="210dp"
-            android:scaleType="fitXY"
             android:contentDescription="@string/wall"
-            app:shapeAppearanceOverlay="@style/ImageCircleTheme"/>
+            android:scaleType="fitXY"
+            app:shapeAppearanceOverlay="@style/ImageCircleTheme" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="0dp" />

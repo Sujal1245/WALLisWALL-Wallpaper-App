@@ -66,8 +66,8 @@ public class Wallpaper extends AppCompatActivity {
         endView = findViewById(R.id.linearL);
         ViewCompat.setTransitionName(endView, "Wall" + (position + 1) + "_Transition");
         setEnterSharedElementCallback(new MaterialContainerTransformSharedElementCallback());
-        getWindow().setSharedElementEnterTransition(new MaterialContainerTransform().addTarget(R.id.linearL).setDuration(300L));
-        getWindow().setSharedElementReturnTransition(new MaterialContainerTransform().addTarget(R.id.linearL).setDuration(250L));
+        getWindow().setSharedElementEnterTransition(new MaterialContainerTransform().addTarget(R.id.linearL).setDuration(500L));
+        getWindow().setSharedElementReturnTransition(new MaterialContainerTransform().addTarget(R.id.linearL).setDuration(400L));
 
         wall = findViewById(R.id.wall);
 

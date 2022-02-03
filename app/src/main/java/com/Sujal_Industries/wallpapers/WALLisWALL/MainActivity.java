@@ -2,8 +2,13 @@ package com.Sujal_Industries.wallpapers.WALLisWALL;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -67,6 +72,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
 
         setContentView(R.layout.activity_main);
 
+        manageConnectivity();
+
         Chip darkChip = findViewById(R.id.turnDark);
         Chip lightChip = findViewById(R.id.turnLight);
 
@@ -79,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
         clearFavsButton = findViewById(R.id.clear_fav_button);
         shuffleToggle = findViewById(R.id.setting3_toggle);
         setting3_on = findViewById(R.id.setting3_on);
-        setting3_off=findViewById(R.id.setting3_off);
+        setting3_off = findViewById(R.id.setting3_off);
 
         sharedPreferences = getSharedPreferences(spFileKey, MODE_PRIVATE);
         helper = new FavouritesHelper(sharedPreferences);
@@ -138,8 +145,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
 
     @SuppressLint("NotifyDataSetChanged")
     public void refreshRecyclerView() {
-        if(sharedPreferences.getBoolean("Shuffle?", false))
-        {
+        if (sharedPreferences.getBoolean("Shuffle?", false)) {
             Collections.shuffle(images);
         }
         adapter.notifyDataSetChanged();
@@ -241,17 +247,14 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
 
         boolean currentShuffle = sharedPreferences.getBoolean("Shuffle?", false);
 
-        if(currentShuffle)
-        {
+        if (currentShuffle) {
             setting3_on.setChecked(true);
-        }
-        else
-        {
+        } else {
             setting3_off.setChecked(true);
         }
 
         shuffleToggle.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
-            if(isChecked) {
+            if (isChecked) {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putBoolean("Shuffle?", checkedId == R.id.setting3_on);
                 editor.apply();
@@ -288,5 +291,43 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
             context.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         }
         return displayMetrics.widthPixels;
+    }
+
+    public static boolean isConnectingToInternet(Context mContext) {
+        if (mContext == null) return false;
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                final Network network = connectivityManager.getActiveNetwork();
+                if (network != null) {
+                    final NetworkCapabilities nc = connectivityManager.getNetworkCapabilities(network);
+
+                    return (nc.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+                            nc.hasTransport(NetworkCapabilities.TRANSPORT_WIFI));
+                }
+            } else {
+                NetworkInfo[] networkInfos = connectivityManager.getAllNetworkInfo();
+                for (NetworkInfo tempNetworkInfo : networkInfos) {
+                    if (tempNetworkInfo.isConnected()) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public void manageConnectivity()
+    {
+        if(!isConnectingToInternet(this))
+        {
+            new MaterialAlertDialogBuilder(this)
+                    .setTitle("Unable to connect :(")
+                    .setMessage("Looks like you aren't connected to internet. Want to retry?")
+                    .setPositiveButton("RETRY", (dialogInterface, i) -> manageConnectivity())
+                    .setCancelable(false)
+                    .show();
+        }
     }
 }

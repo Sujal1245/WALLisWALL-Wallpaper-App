@@ -9,8 +9,8 @@ android {
         applicationId "com.Sujal_Industries.wallpapers.WALLisWALL"
         minSdkVersion 21
         targetSdkVersion 32
-        versionCode 17
-        versionName "2.3.3"
+        versionCode 18
+        versionName "2.3.4"
     }
     buildTypes {
         release {
