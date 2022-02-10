@@ -1,5 +1,6 @@
 package com.Sujal_Industries.wallpapers.WALLisWALL;
 
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
@@ -38,9 +41,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ImageV
         holder.itemView.getLayoutParams().width = (widthPixels / 2) - 28;
 
         StorageReference sr = images.get(position);
+        RequestBuilder<Drawable> requestBuilder= GlideApp.with(holder.itemView.getContext())
+                .asDrawable().sizeMultiplier(0.1f);
         GlideApp.with(holder.itemView.getContext())
                 .load(sr)
-                .thumbnail(0.2f)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .thumbnail(requestBuilder)
                 .placeholder(R.drawable.background_splash)
                 .into(holder.album);
         holder.albumTitle.setText(giveName(sr.getName()));

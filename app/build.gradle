@@ -9,8 +9,8 @@ android {
         applicationId "com.Sujal_Industries.wallpapers.WALLisWALL"
         minSdkVersion 21
         targetSdkVersion 32
-        versionCode 18
-        versionName "2.3.4"
+        versionCode 19
+        versionName "2.3.5"
     }
     buildTypes {
         release {
@@ -34,8 +34,8 @@ dependencies {
     implementation 'com.google.android.material:material:1.6.0-alpha02'
     implementation 'com.google.firebase:firebase-storage:20.0.0'
     implementation 'com.firebaseui:firebase-ui-storage:8.0.0'
-    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    implementation 'com.github.bumptech.glide:glide:4.13.0'
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
     implementation 'com.google.code.gson:gson:2.8.9'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.13.0'
 }
