@@ -1,6 +1,5 @@
 package com.Sujal_Industries.wallpapers.WALLisWALL;
 
-import android.annotation.SuppressLint;
 import android.app.WallpaperManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -48,7 +47,6 @@ public class Wallpaper extends AppCompatActivity {
     private FavouritesHelper helper;
     private String wall_name;
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,7 +105,6 @@ public class Wallpaper extends AppCompatActivity {
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setLayoutParams(layoutParams);
             dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setLayoutParams(layoutParams);
             dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setLayoutParams(layoutParams);
-
 
             applyWall.shrink();
             loadIn.show();

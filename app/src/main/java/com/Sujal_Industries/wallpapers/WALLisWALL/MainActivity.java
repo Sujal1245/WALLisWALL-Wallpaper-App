@@ -317,10 +317,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
         return false;
     }
 
-    public void manageConnectivity()
-    {
-        if(!isConnectingToInternet(this))
-        {
+    public void manageConnectivity() {
+        if (!isConnectingToInternet(this)) {
             new MaterialAlertDialogBuilder(this)
                     .setTitle("Unable to connect :(")
                     .setMessage("Looks like you aren't connected to internet. Want to retry?")
