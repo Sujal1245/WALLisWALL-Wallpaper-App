@@ -18,10 +18,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.elevation.SurfaceColors;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
@@ -54,12 +54,11 @@ public class Wallpaper extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallpaper);
 
-        boolean isNight = getIntent().getBooleanExtra("isNight", false);
-        if (isNight) {
-            getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.navColorDark));
-        } else {
-            getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.navColorLight));
-        }
+        wall = findViewById(R.id.wall);
+        loadIn = findViewById(R.id.loadingIndicator);
+        applyWall = findViewById(R.id.applyWall);
+
+        getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(this));
 
         int position = getIntent().getIntExtra("Position", 0);
         helper = new FavouritesHelper(getSharedPreferences(spFileKey, MODE_PRIVATE));
@@ -69,9 +68,6 @@ public class Wallpaper extends AppCompatActivity {
         getWindow().setSharedElementEnterTransition(new MaterialContainerTransform().addTarget(R.id.linearL).setDuration(500L));
         getWindow().setSharedElementReturnTransition(new MaterialContainerTransform().addTarget(R.id.linearL).setDuration(400L));
 
-        wall = findViewById(R.id.wall);
-
-        loadIn = findViewById(R.id.loadingIndicator);
         loadIn.hide();
 
         StorageReference wallRef = FirebaseStorage.getInstance().getReference(getIntent().getStringExtra("StorageRef"));
@@ -83,7 +79,6 @@ public class Wallpaper extends AppCompatActivity {
 
         wall_name = wallRef.getName();
 
-        applyWall = findViewById(R.id.applyWall);
         applyWall.setOnClickListener(v -> {
             AlertDialog dialog = new MaterialAlertDialogBuilder(this, R.style.MyMaterialAlertDialog)
                     .setTitle("Set Wall to....")
