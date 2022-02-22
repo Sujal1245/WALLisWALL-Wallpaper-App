@@ -195,6 +195,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
 
     public void setUpSettingsPage(ListResult listResult) {
         recyclerView.setVisibility(View.GONE);
+        settings.setCardBackgroundColor(SurfaceColors.SURFACE_2.getColor(this));
         settings.setVisibility(View.VISIBLE);
         images.clear();
         images.addAll(listResult.getItems());
