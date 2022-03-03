@@ -48,7 +48,7 @@ public class SettingsBottomSheet extends BottomSheetDialogFragment {
             lightChip.setChecked(true);
         }
         //Setting(1) below
-        themeToggle.setOnCheckedChangeListener((group, checkedId) -> {
+        themeToggle.setOnCheckedStateChangeListener((group, checkedId) -> {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             if (!isNight) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);

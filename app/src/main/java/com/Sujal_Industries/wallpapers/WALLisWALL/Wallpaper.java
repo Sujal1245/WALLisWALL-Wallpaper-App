@@ -52,19 +52,20 @@ public class Wallpaper extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallpaper);
 
+        int position = getIntent().getIntExtra("Position", 0);
+        endView = findViewById(R.id.linearL);
+        ViewCompat.setTransitionName(endView, "Wall" + (position + 1) + "_Transition");
+        setEnterSharedElementCallback(new MaterialContainerTransformSharedElementCallback());
+        getWindow().setSharedElementEnterTransition(new MaterialContainerTransform().addTarget(R.id.linearL).setDuration(600L));
+        getWindow().setSharedElementReturnTransition(new MaterialContainerTransform().addTarget(R.id.linearL).setDuration(500L));
+
         wall = findViewById(R.id.wall);
         loadIn = findViewById(R.id.loadingIndicator);
         applyWall = findViewById(R.id.applyWall);
 
         getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(this));
 
-        int position = getIntent().getIntExtra("Position", 0);
         helper = new FavouritesHelper(getSharedPreferences(spFileKey, MODE_PRIVATE));
-        endView = findViewById(R.id.linearL);
-        ViewCompat.setTransitionName(endView, "Wall" + (position + 1) + "_Transition");
-        setEnterSharedElementCallback(new MaterialContainerTransformSharedElementCallback());
-        getWindow().setSharedElementEnterTransition(new MaterialContainerTransform().addTarget(R.id.linearL).setDuration(500L));
-        getWindow().setSharedElementReturnTransition(new MaterialContainerTransform().addTarget(R.id.linearL).setDuration(400L));
 
         loadIn.hide();
 
