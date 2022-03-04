@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
     private FavouritesHelper helper;
     private SharedPreferences sharedPreferences;
     private int lastPage;
-    boolean needToRefresh = true;
+    private boolean needToAnimate = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,11 +123,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
 
     @SuppressLint("NotifyDataSetChanged")
     public void refreshRecyclerView() {
-        if (needToRefresh) {
-            if (sharedPreferences.getBoolean("Shuffle?", false)) {
-                Collections.shuffle(images);
-            }
-            adapter.notifyDataSetChanged();
+        if (sharedPreferences.getBoolean("Shuffle?", false)) {
+            Collections.shuffle(images);
+        }
+        adapter.notifyDataSetChanged();
+        if (needToAnimate) {
             animateRecyclerView();
         }
     }
@@ -257,16 +257,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
     public void manageBottomNav() {
         int id = 123;
         switch (lastPage) {
-            case 0 -> {
-                id = R.id.main_page;
-                needToRefresh = false;
-            }
-            case 1 -> {
-                id = R.id.fav_page;
-                needToRefresh = true;
-            }
+            case 0 -> id = R.id.main_page;
+            case 1 -> id = R.id.fav_page;
         }
+        needToAnimate = false;
         bottomNavBar.setSelectedItemId(id);
-        needToRefresh = true;
+        needToAnimate = true;
     }
 }
