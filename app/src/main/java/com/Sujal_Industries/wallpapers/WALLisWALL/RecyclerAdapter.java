@@ -38,10 +38,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ImageV
 
     @Override
     public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
-        holder.itemView.getLayoutParams().width = (widthPixels / 2) - 28;
+        holder.itemView.getLayoutParams().width = (widthPixels - 84) / 2;
 
         StorageReference sr = images.get(position);
-        RequestBuilder<Drawable> requestBuilder= GlideApp.with(holder.itemView.getContext())
+        RequestBuilder<Drawable> requestBuilder = GlideApp.with(holder.itemView.getContext())
                 .asDrawable().sizeMultiplier(0.1f);
         GlideApp.with(holder.itemView.getContext())
                 .load(sr)

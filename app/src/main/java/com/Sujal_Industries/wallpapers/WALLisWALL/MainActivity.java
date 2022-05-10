@@ -209,13 +209,15 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
     }
 
     public static int getScreenWidthPixels(AppCompatActivity context) {
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            context.getDisplay().getRealMetrics(displayMetrics);
+        int widthPixels;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            widthPixels = context.getWindowManager().getCurrentWindowMetrics().getBounds().width();
         } else {
+            DisplayMetrics displayMetrics = new DisplayMetrics();
             context.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            widthPixels = displayMetrics.widthPixels;
         }
-        return displayMetrics.widthPixels;
+        return widthPixels;
     }
 
     public static boolean isConnectingToInternet(Context mContext) {
