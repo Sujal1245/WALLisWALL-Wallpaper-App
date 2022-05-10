@@ -2,13 +2,11 @@ package com.Sujal_Industries.wallpapers.WALLisWALL;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.Network;
-import android.net.NetworkCapabilities;
-import android.net.NetworkInfo;
+import android.net.NetworkRequest;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -16,6 +14,8 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.splashscreen.SplashScreen;
@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
     private SharedPreferences sharedPreferences;
     private int lastPage;
     private boolean needToAnimate = true;
+    AlertDialog alertDialog = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
 
         setContentView(R.layout.activity_main);
 
-        manageConnectivity();
+
 
         images = new ArrayList<>();
         container = findViewById(R.id.shimmerContainer);
@@ -118,6 +119,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
                     recyclerView.setVisibility(View.VISIBLE);
                     Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
+
+        manageConnectivity();
 
     }
 
@@ -220,39 +223,43 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
         return widthPixels;
     }
 
-    public static boolean isConnectingToInternet(Context mContext) {
-        if (mContext == null) return false;
-
-        ConnectivityManager connectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivityManager != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                final Network network = connectivityManager.getActiveNetwork();
-                if (network != null) {
-                    final NetworkCapabilities nc = connectivityManager.getNetworkCapabilities(network);
-
-                    return (nc.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
-                            nc.hasTransport(NetworkCapabilities.TRANSPORT_WIFI));
-                }
-            } else {
-                NetworkInfo[] networkInfos = connectivityManager.getAllNetworkInfo();
-                for (NetworkInfo tempNetworkInfo : networkInfos) {
-                    if (tempNetworkInfo.isConnected()) {
-                        return true;
-                    }
+    public ConnectivityManager.NetworkCallback networkCallback = new ConnectivityManager.NetworkCallback() {
+        @Override
+        public void onAvailable(@NonNull Network network) {
+            super.onAvailable(network);
+            if (alertDialog != null) {
+                if (alertDialog.isShowing()) {
+                    alertDialog.dismiss();
                 }
             }
         }
-        return false;
-    }
+
+        @Override
+        public void onUnavailable() {
+            super.onUnavailable();
+            Toast.makeText(getApplicationContext(), "Network Unavailable", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onLost(@NonNull Network network) {
+            super.onLost(network);
+            alertDialog = new MaterialAlertDialogBuilder(MainActivity.this)
+                    .setTitle("Unable to connect :(")
+                    .setMessage("Looks like you aren't connected to internet. Please check your connection.")
+                    .setCancelable(false)
+                    .create();
+            alertDialog.show();
+        }
+    };
 
     public void manageConnectivity() {
-        if (!isConnectingToInternet(this)) {
-            new MaterialAlertDialogBuilder(this)
-                    .setTitle("Unable to connect :(")
-                    .setMessage("Looks like you aren't connected to internet. Want to retry?")
-                    .setPositiveButton("RETRY", (dialogInterface, i) -> manageConnectivity())
-                    .setCancelable(false)
-                    .show();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ConnectivityManager connectivityManager = getSystemService(ConnectivityManager.class);
+            connectivityManager.requestNetwork(new NetworkRequest.Builder().build(), networkCallback);
+        }
+        else
+        {
+            //TODO
         }
     }
 
