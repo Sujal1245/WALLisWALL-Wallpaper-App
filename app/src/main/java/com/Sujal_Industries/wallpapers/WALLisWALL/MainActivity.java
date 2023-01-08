@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.Window;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
         setExitSharedElementCallback(new MaterialContainerTransformSharedElementCallback());
         getWindow().setSharedElementsUseOverlay(false);
 
@@ -61,8 +63,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
         SplashScreen.installSplashScreen(this);
 
         setContentView(R.layout.activity_main);
-
-
 
         images = new ArrayList<>();
         container = findViewById(R.id.shimmerContainer);
