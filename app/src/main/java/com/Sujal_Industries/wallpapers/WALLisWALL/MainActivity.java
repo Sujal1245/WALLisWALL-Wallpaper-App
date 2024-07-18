@@ -26,7 +26,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.elevation.SurfaceColors;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback;
 import com.google.firebase.storage.FirebaseStorage;
@@ -78,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
 
-        getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(this));
+//        getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(this));
 
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 2);
 
